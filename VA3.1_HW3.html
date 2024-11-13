@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <main>
+      <section class="container mt-4">
+        <h2>Poll Voting</h2>
+        <label for="johnDoe">John Doe</label>
+        <input type="radio" value="johnDoe" id="johnDoe" name="candidate" />
+        <br />
+        <br />
+
+        <label for="alexWilliam">Alex William</label>
+        <input
+          type="radio"
+          value="alexWilliam"
+          id="alexWilliam"
+          name="candidate"
+        />
+        <br />
+        <br />
+
+        <label for="perenaNawar">Perena Nawar</label>
+        <input
+          type="radio"
+          value="perenaNawar"
+          id="perenaNawar"
+          name="candidate"
+        />
+        <br />
+        <br />
+
+        <button type="button" class="btn btn-primary" id="voteBtn">Vote</button>
+      </section>
+
+      <section class="mt-4 container">
+        <h3>Results</h3>
+        <ul class="list-group" id="resultList"></ul>
+      </section>
+
+      <section class="mt-4 container">
+        <h3>Winner</h3>
+        <p id="winnerResult"></p>
+      </section>
+
+      <script>
+        const voteBtn = document.getElementById("voteBtn");
+        const resultList = document.getElementById("resultList");
+        const winnerResult = document.getElementById("winnerResult");
+        let votes = { johnDoe: 0, alexWilliam: 0, perenaNawar: 0 };
+
+        voteBtn.addEventListener("click", function () {
+          const selectedCandidate = document.querySelector(
+            'input[name="candidate"]:checked'
+          );
+
+          if (selectedCandidate) {
+            const candidateName = selectedCandidate.value;
+            votes[candidateName]++;
+            updateResults();
+            updateWinner();
+          }
+        });
+
+        function updateResults() {
+          resultList.innerHTML = "";
+          for (const candidate in votes) {
+            const candidateVotes = votes[candidate];
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item";
+            listItem.textContent = candidate + ":" + candidateVotes;
+            resultList.appendChild(listItem);
+          }
+        }
+
+        function updateWinner() {
+          let winner = "";
+          let maxVotes = 0;
+          let tiedCandidates = [];
+          for (const candidate in votes) {
+            if (votes[candidate] > maxVotes) {
+              maxVotes = votes[candidate];
+              winner = candidate;
+              tiedCandidates = [candidate];
+            } else if (votes[candidate] === maxVotes) {
+              tiedCandidates.push(candidate);
+            }
+          }
+
+          if (tiedCandidates.length > 1) {
+            winnerResult.textContent =
+              "It is a tie between " +
+              tiedCandidates.join(" and ") +
+              " with " +
+              maxVotes +
+              " vote" +
+              (maxVotes > 1 ? "s" : "");
+          } else {
+            winnerResult.textContent =
+              winner +
+              " is winning with " +
+              maxVotes +
+              " vote" +
+              (maxVotes > 1 ? "s" : "");
+          }
+        }
+      </script>
+    </main>
+  </body>
+</html>
